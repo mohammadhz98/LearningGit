@@ -1,0 +1,185 @@
+##############################################################################
+									GIT
+##############################################################################
+git init
+# make this directory under git control and make .git folder
+================================================================
+git config --global user.email ['mhz7596@gmail.com']
+git config --global user.name ['mohamadhz98']
+================================================================
+git status
+#show the status of files and changes that didn't save yet
+================================================================
+#file -> file modify -> stage -> commit
+================================================================
+#Stage step
+#untracked files OR modified file-> git add <fileName> -> the file is in stage step
+git add index.html
+git add -A #for all file in this folder
+git add "*.html" #for all html files in this folder
+git add "page*" #for all files that their name start with page
+git add . 
+
+================================================================
+#Commit step
+git commit -m "any comment"
+================================================================
+#show the commit information and changes
+git show <commitHash>
+================================================================
+#show the history of commits
+git log
+================================================================
+#show changes
+git diff HEAD
+git diff --staged
+================================================================
+#remove file from stage step 
+git reset fileName
+================================================================
+#remove all of change from file and return to last commited file
+git checkout -- fileName
+================================================================
+#delete file from git and system
+git rm fileName
+
+##############################################################################
+									Branch
+##############################################################################
+#show all branches
+git branch
+================================================================
+#create new branch
+git branch <branchName>
+================================================================
+#change branch that we are on it
+git checkout <branchName>
+================================================================
+# Note : there is ohmyzsh that show you are on which branch  
+================================================================
+#delete a branch after merging it and when we don't need it anymore
+git branch -d <branchName>
+
+##############################################################################
+							clone & push & pull
+##############################################################################
+# clone a project to my system
+git clone <projectAddress>
+================================================================
+# Note : origin is the branch of cloned project
+
+================================================================
+# send a project to the address
+# git push to from
+git push origin master
+git push -u origin master # by -u remember connect user and pass
+================================================================
+# take a project from the address
+# git pull from to
+git pull origin master
+================================================================
+##############################################################################
+									remote
+##############################################################################
+git remote
+git remote -v #show remotes with more detail
+================================================================
+git remote add [remoteName] [remoteAddress]
+git remote add [origin] [https://github.com/test/]
+================================================================
+
+##############################################################################
+									conflict
+##############################################################################
+#in remote project
+#first pull the project 
+#fix the conflict 
+#push the project
+##in local
+#add conflict file
+#commit conflict file
+#edit file 
+================================================================
+
+##############################################################################
+									Tag
+##############################################################################
+#show tags
+git tag
+git tag -l "v1*"
+git show v1.4
+================================================================
+#add new tag to commit
+git tag -a v1.4 -m "any message"
+git tag -a v1.43 commitHash -m "any message"
+
+================================================================
+#push tag on origin or destenation
+git push origin v1.4
+git push origin --tags
+================================================================
+git checkout v1.4
+================================================================
+
+##############################################################################
+									Blame
+##############################################################################
+git blame fileName
+git blame fileName L8
+git blame fileName L8,10
+##############################################################################
+									Bisect
+##############################################################################
+#binary search commit
+git bisect start
+git bisect bad
+git bisect bad commitHash
+git bisect good
+##############################################################################
+								GPG & Signature
+##############################################################################
+gpg --list-keys
+gpg --gen-key
+git config --global user.signingkey
+gpg --list-secret-keys --keyid-format LONG #rsa2048/signingkeyIsHere
+git config --global user.signingkey [signingkey] #signingkey find from gpg --list-secret-keys --keyid-format LONG
+git tag -s v1.4 -m "any message" #add tag by sign it
+git tag -v v1.4 #for verify
+git commit -S -m "message" #sign commit 
+##############################################################################
+								GIT Ignore
+##############################################################################
+# some file that we don't want to track or snapshot
+# create .gitignore file near the .git directory. cmd -> copy con gitignore
+# open this file with notepad and add files to ignore. 
+#.gitignore
+#*.apk
+#/directoryName
+#/directoryName/*.apk
+# !/directoryName/1.apk #this code will track this file
+
+##############################################################################
+								GIT Reset
+##############################################################################
+
+Careful: git reset --hard WILL DELETE YOUR WORKING DIRECTORY CHANGES. Be sure to stash any local changes you want to keep before running this command.
+
+Assuming you are sitting on that commit, then this command will wack it...
+
+git reset --hard HEAD~1
+The HEAD~1 means the commit before head.
+
+Or, you could look at the output of git log, find the commit id of the commit you want to back up to, and then do this:
+
+git reset --hard <sha1-commit-id>
+If you already pushed it, you will need to do a force push to get rid of it...
+
+git push origin HEAD --force
+However, if others may have pulled it, then you would be better off starting a new branch. Because when they pull, it will just merge it into their work, and you will get it pushed back up again.
+
+If you already pushed, it may be better to use git revert, to create a "mirror image" commit that will undo the changes. However, both commits will be in the log.
+
+FYI -- git reset --hard HEAD is great if you want to get rid of WORK IN PROGRESS. It will reset you back to the most recent commit, and erase all the changes in your working tree and index.
+
+Lastly, if you need to find a commit that you "deleted", it is typically present in git reflog unless you have garbage collected your repository.
+
